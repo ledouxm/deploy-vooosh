@@ -1,0 +1,7 @@
+version: "3"
+services:
+  vooosh:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: vooosh/server/latest
