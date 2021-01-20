@@ -1,17 +1,19 @@
 const HexToWords = require("guid-in-words");
-const postgres = require("postgres");
+const { Client } = require("pg");
 const hostile = require("hostile");
 const { execSync, exec } = require("child_process", { stdio: ["pipe", "pipe", "pipe"] });
 const fs = require("fs");
 let sql;
 try {
-    sql = postgres("postgres://username:password@host:port/database", {
+    sql = new Client({
         host: "postgresql", // Postgres ip address or domain name
         port: 5432, // Postgres server port
         database: "vooosh", // Name of database to connect to
-        username: "vooosh", // Username of database user
+        user: "vooosh", // Username of database user
         password: "admin", // Password of database user
     });
+
+    sql.connect();
 } catch (e) {
     console.error("Error connecting to db");
     process.exit(0);
@@ -25,8 +27,9 @@ const deploy = async (branchName) => {
 
     //CREER DB (name = RANDOMURL)
     try {
-        console.log("creating db", randomUrl);
-        sql.query(`CREATE DATABASE ${randomUrl}`);
+        const query = `CREATE DATABASE ${randomUrl}`;
+        console.log(query);
+        await sql.query(query);
     } catch (e) {
         console.error("Error creating db", e);
         process.exit(0);
