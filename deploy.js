@@ -1,7 +1,7 @@
 const HexToWords = require("guid-in-words");
 const postgres = require("postgres");
 const hostile = require("hostile");
-const { exec } = require("child_process");
+const { execSync } = require("child_process");
 
 const sql = postgres("postgres://username:password@host:port/database", {
     host: "localhost", // Postgres ip address or domain name
@@ -23,7 +23,7 @@ const deploy = async (branchName) => {
     //SET VIRTUAL HOST (127.0.0.1 RANDOMURL)
     try {
         console.log("setting virtual host");
-        await hostile.set("127.0.0.1", randomUrl);
+        hostile.set("127.0.0.1", randomUrl);
     } catch (e) {
         console.error("Error setting virtual host", e);
         exit(0);
@@ -32,7 +32,7 @@ const deploy = async (branchName) => {
     //CREER DOSSIER /app/[RANDOMURL]
     try {
         console.log(`mkdir ./app/${randomStr}`);
-        await exec(`mkdir ./app/${randomStr}`);
+        execSync(`mkdir ./app/${randomStr}`);
     } catch (e) {
         console.error("Error creating folder", e);
         exit(0);
@@ -43,9 +43,7 @@ const deploy = async (branchName) => {
         console.log(
             `git clone --single-branch --branch ${branchName} git@github.com:ledouxm/vooosh`
         );
-        await exec(
-            `git clone --single-branch --branch ${branchName} git@github.com:ledouxm/vooosh`
-        );
+        execSync(`git clone --single-branch --branch ${branchName} git@github.com:ledouxm/vooosh`);
     } catch (e) {
         console.error("Error cloning repo", e);
         exit(0);
@@ -59,8 +57,8 @@ const deploy = async (branchName) => {
     //LANCER docker-compose DU SERVEUR
     try {
         process.chdir(`./app/${randomStr}`);
-        await exec(`docker build -t ${randomStr} ./`);
-        await exec(`docker run -d -e VIRTUAL_HOST=${randomUrl} ${randomStr}`);
+        execSync(`docker build -t ${randomStr} ./`);
+        execSync(`docker run -d -e VIRTUAL_HOST=${randomUrl} ${randomStr}`);
     } catch (e) {
         console.error("Error starting docker compose", e);
         exit(0);

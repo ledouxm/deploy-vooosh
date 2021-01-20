@@ -33,7 +33,8 @@ services:
     nginx-proxy:
         container_name: nginx-proxy
         image: jwilder/nginx-proxy
-        ports: 80:80
+        ports:
+            - "80:80"
         volumes:
             - /var/run/docker.sock:/tmp/docker.sock:ro
 
