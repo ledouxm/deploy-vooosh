@@ -3,6 +3,8 @@ const { Client } = require("pg");
 const hostile = require("hostile");
 const { execSync, exec } = require("child_process", { stdio: ["pipe", "pipe", "pipe"] });
 const fs = require("fs");
+const firstOpenPort = require("first-open-port");
+
 let sql;
 try {
     sql = new Client({
@@ -19,10 +21,20 @@ try {
     process.exit(0);
 }
 
+const generateRandomPort = async () => {
+    try {
+        return await firstOpenPort(8000, 9000);
+    } catch (e) {
+        console.error("Error generating random port", e);
+        process.exit(0);
+    }
+};
+
 const deploy = async (branchName) => {
     //GENERER RANDOMURL
     const randomStr = HexToWords.randomGuid().words.split(" ").slice(0, 3).join("-");
     const randomUrl = `${randomStr}.mledoux.fr`;
+    const randomPort = await generateRandomPort();
     console.log(randomStr, randomUrl);
 
     //CREER DB (name = RANDOMURL)
@@ -75,7 +87,8 @@ const deploy = async (branchName) => {
     const templateDockerCompose = fs.readFileSync("./template-docker-compose.yml", "utf-8");
     const newDockerCompose = templateDockerCompose
         .replace("{{VIRTUAL_HOST}}", randomUrl)
-        .replace("{{DB_NAME}}", randomStr);
+        .replace("{{DB_NAME}}", randomStr)
+        .replace(new RegExp("{{PORT}}", "g"), randomPort);
     fs.writeFileSync(`./app/${randomStr}/docker-compose.yml`, newDockerCompose);
     //	console.log('red', template);
     //const appDockerfile = template.replace("{{DB_NAME}}", randomStr);

@@ -6,7 +6,10 @@ services:
         volumes:
             - .:/tmp/app
             - /opt/app/node_modules
+        ports:
+            - "{{PORT}}:{{PORT}}"
         environment:
+            - PORT={{PORT}}
             - DEBUG=vooosh:*
             - NODE_ENV=production
             - DB_HOST=postgresql
