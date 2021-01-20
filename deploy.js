@@ -77,8 +77,6 @@ const deploy = async (branchName) => {
         .replace("{ { VIRTUAL_HOST } }", randomUrl)
         .replace("{ { DB_NAME } }", randomStr);
     fs.writeFileSync(`./app/${randomStr}/docker-compose.yml`, newDockerCompose);
-
-    console.log("DOCKER COMPOSE", newDockerCompose);
     //	console.log('red', template);
     //const appDockerfile = template.replace("{{DB_NAME}}", randomStr);
     //LANCER docker-compose DU SERVEUR
