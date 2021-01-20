@@ -6,7 +6,7 @@ const fs = require("fs");
 let sql;
 try {
     sql = new Client({
-        host: "postgresql", // Postgres ip address or domain name
+        host: "localhost", // Postgres ip address or domain name
         port: 5432, // Postgres server port
         database: "vooosh", // Name of database to connect to
         user: "vooosh", // Username of database user
