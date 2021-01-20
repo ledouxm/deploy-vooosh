@@ -67,7 +67,9 @@ const deploy = async (branchName) => {
     const templateDockerfile = fs.readFileSync("./template-dockerfile", "utf-8");
     fs.writeFileSync(`./app/${randomStr}/Dockerfile`, templateDockerfile);
     const templateDockerCompose = fs.readFileSync("./template-docker-compose.yml", "utf-8");
-    const newDockerCompose = templateDockerCompose.replace("{ { VIRTUAL_HOST } }", randomUrl);
+    const newDockerCompose = templateDockerCompose
+        .replace("{ { VIRTUAL_HOST } }", randomUrl)
+        .replace("{ { DB_NAME } }", randomStr);
     fs.writeFileSync(`./app/${randomStr}/docker-compose.yml`, newDockerCompose);
     //	console.log('red', template);
     //const appDockerfile = template.replace("{{DB_NAME}}", randomStr);
@@ -75,7 +77,7 @@ const deploy = async (branchName) => {
     try {
         process.chdir(`./app/${randomStr}`);
         console.log("building");
-        execSync("docker-compose up -d");
+        execSync("docker-compose up -d").toString();
         console.log("running");
     } catch (e) {
         console.error("Error starting docker compose", e);
