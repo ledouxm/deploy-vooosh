@@ -1,36 +1,36 @@
 const HexToWords = require("guid-in-words");
 const postgres = require("postgres");
 const hostile = require("hostile");
-const { execSync, exec } = require("child_process", { stdio: ['pipe', 'pipe', 'pipe'] });
-const fs = require('fs');
+const { execSync, exec } = require("child_process", { stdio: ["pipe", "pipe", "pipe"] });
+const fs = require("fs");
 let sql;
-try{
-	sql = postgres("postgres://username:password@host:port/database", {
-	    host: "localhost", // Postgres ip address or domain name
-	    port: 5432, // Postgres server port
-	    database: "vooosh", // Name of database to connect to
-	    username: "vooosh", // Username of database user
-	    password: "admin", // Password of database user
-	});
-}catch(e){
-	console.error("Error connecting to db");
-	process.exit(0);
+try {
+    sql = postgres("postgres://username:password@host:port/database", {
+        host: "localhost", // Postgres ip address or domain name
+        port: 5432, // Postgres server port
+        database: "vooosh", // Name of database to connect to
+        username: "vooosh", // Username of database user
+        password: "admin", // Password of database user
+    });
+} catch (e) {
+    console.error("Error connecting to db");
+    process.exit(0);
 }
 
 const deploy = async (branchName) => {
     //GENERER RANDOMURL
-    const randomStr = HexToWords.randomGuid().words.split(' ').slice(0, 3).join('-');
+    const randomStr = HexToWords.randomGuid().words.split(" ").slice(0, 3).join("-");
     const randomUrl = `${randomStr}.mledoux.fr`;
-	console.log(randomStr, randomUrl);
+    console.log(randomStr, randomUrl);
 
     //CREER DB (name = RANDOMURL)
-	try{
-	    console.log("creating db", randomUrl);
-	    sql`CREATE DATABASE ${randomUrl}`;
-	} catch(e){
-		console.error("Error creating db", e);
-		process.exit(0);
-	}
+    try {
+        console.log("creating db", randomUrl);
+        sql`CREATE DATABASE ${randomUrl}`;
+    } catch (e) {
+        console.error("Error creating db", e);
+        process.exit(0);
+    }
     //SET VIRTUAL HOST (127.0.0.1 RANDOMURL)
     try {
         console.log("setting virtual host");
@@ -54,32 +54,29 @@ const deploy = async (branchName) => {
         console.log(
             `git clone --single-branch --branch ${branchName} git@github.com:ledouxm/vooosh`
         );
-        execSync(`git clone --single-branch --branch ${branchName} git@github.com:astahmer/vooosh ./app/${randomStr}`);
+        execSync(
+            `git clone --single-branch --branch ${branchName} git@github.com:astahmer/vooosh ./app/${randomStr}`
+        );
     } catch (e) {
         console.error("Error cloning repo", e);
         process.exit(0);
     }
 
     //COPIER template-docker-compose DANS /app/[randomUrl] en changeant la variable VIRTUAL_HOST
-	console.log("reading template docker file");
-    const template = fs.readFileSync("./template-dockerfile", 'utf-8');
-//	console.log('red', template);
-//const appDockerfile = template.replace("{{DB_NAME}}", randomStr);
-    fs.writeFileSync(`./app/${randomStr}/Dockerfile`, template);
+    console.log("reading template docker file");
+    const templateDockerfile = fs.readFileSync("./template-dockerfile", "utf-8");
+    fs.writeFileSync(`./app/${randomStr}/Dockerfile`, templateDockerfile);
+    const templateDockerCompose = fs.readFileSync("./template-docker-compose.yml", "utf-8");
+    const newDockerCompose = templateDockerCompose.replace("{ { VIRTUAL_HOST } }", randomUrl);
+    fs.writeFileSync(`./app/${randomStr}/docker-compose.yml`, newDockerCompose);
+    //	console.log('red', template);
+    //const appDockerfile = template.replace("{{DB_NAME}}", randomStr);
     //LANCER docker-compose DU SERVEUR
     try {
         process.chdir(`./app/${randomStr}`);
-	console.log('building');
-        exec(`docker build -t ${randomStr} ./`, (error, stdout, stderr) => {
-	  if (error) {
-	    console.error(`exec error: ${error}`);
-	    return;
-	  }
-	  console.log(`stdout: ${stdout}`);
-	  console.error(`stderr: ${stderr}`);
-	});
-        console.log('running');
-	//execSync(`docker run -d -e VIRTUAL_HOST=${randomUrl} ${randomStr}`).toString();
+        console.log("building");
+        execAsync("docker-compose up -d");
+        console.log("running");
     } catch (e) {
         console.error("Error starting docker compose", e);
         process.exit(0);
