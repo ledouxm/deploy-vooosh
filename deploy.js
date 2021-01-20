@@ -27,7 +27,7 @@ const deploy = async (branchName) => {
 
     //CREER DB (name = RANDOMURL)
     try {
-        const query = `CREATE DATABASE ${randomStr}`;
+        const query = `CREATE DATABASE "${randomStr}"`;
         console.log(query);
         await sql.query(query);
 
