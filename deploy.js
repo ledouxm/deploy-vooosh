@@ -6,7 +6,7 @@ const fs = require("fs");
 let sql;
 try {
     sql = postgres("postgres://username:password@host:port/database", {
-        host: "localhost", // Postgres ip address or domain name
+        host: "postgresql", // Postgres ip address or domain name
         port: 5432, // Postgres server port
         database: "vooosh", // Name of database to connect to
         username: "vooosh", // Username of database user
@@ -26,7 +26,7 @@ const deploy = async (branchName) => {
     //CREER DB (name = RANDOMURL)
     try {
         console.log("creating db", randomUrl);
-        sql`CREATE DATABASE ${randomUrl}`;
+        sql.query(`CREATE DATABASE ${randomUrl}`);
     } catch (e) {
         console.error("Error creating db", e);
         process.exit(0);
