@@ -8,9 +8,6 @@ services:
         environment:
             - VIRTUAL_HOST=pgweb.mledoux.fr
             - DATABASE_URL=postgres://vooosh:admin@postgresql:5432/vooosh?sslmode=disable
-        depends_on:
-            - postgresql
-            - nginx-proxy
         restart: unless-stopped
         networks:
             - backend
