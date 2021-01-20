@@ -30,6 +30,9 @@ const deploy = async (branchName) => {
         const query = `CREATE DATABASE ${randomUrl}`;
         console.log(query);
         await sql.query(query);
+
+        console.log("db created");
+        sql.end();
     } catch (e) {
         console.error("Error creating db", e);
         process.exit(0);
