@@ -33,7 +33,7 @@ const generateRandomPort = async () => {
 const deploy = async (branchName) => {
     //GENERER RANDOMURL
     const randomStr = HexToWords.randomGuid().words.split(" ").slice(0, 3).join("-");
-    const randomUrl = `${randomStr}.mledoux.fr`;
+    const randomUrl = `${randomStr.replace(new RegExp("-", "g"), ".")}.mledoux.fr`;
     const randomPort = await generateRandomPort();
     console.log(randomStr, randomUrl);
 
