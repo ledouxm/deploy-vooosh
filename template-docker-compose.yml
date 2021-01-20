@@ -1,5 +1,20 @@
 version: "3.4"
 services:
+    pgweb:
+        container_name: db-ui
+        image: sosedoff/pgweb:0.11.7
+        ports:
+            - "8081:8081"
+        environment:
+            - VIRTUAL_HOST=pgweb.mledoux.fr
+            - DATABASE_URL=postgres://vooosh:admin@postgresql:5432/vooosh?sslmode=disable
+        depends_on:
+            - postgresql
+            - nginx-proxy
+        restart: unless-stopped
+        networks:
+            - backend
+
     vooosh:
         build: .
         command: yarn workspace @vooosh/server start
@@ -10,7 +25,6 @@ services:
             - "{{PORT}}:{{PORT}}"
         environment:
             - VIRTUAL_HOST={{VIRTUAL_HOST}}
-            - VIRTUAL_PORT={{PORT}}
             - SERVER_PORT={{PORT}}
             - DEBUG=vooosh:*
             - NODE_ENV=production
