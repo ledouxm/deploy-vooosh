@@ -9,7 +9,7 @@ services:
         ports:
             - "{{PORT}}:{{PORT}}"
         environment:
-            - PORT={{PORT}}
+            - SERVER_PORT={{PORT}}
             - DEBUG=vooosh:*
             - NODE_ENV=production
             - DB_HOST=postgresql
