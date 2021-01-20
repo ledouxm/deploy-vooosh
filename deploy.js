@@ -75,7 +75,7 @@ const deploy = async (branchName) => {
     try {
         process.chdir(`./app/${randomStr}`);
         console.log("building");
-        execAsync("docker-compose up -d");
+        execSync("docker-compose up -d");
         console.log("running");
     } catch (e) {
         console.error("Error starting docker compose", e);
