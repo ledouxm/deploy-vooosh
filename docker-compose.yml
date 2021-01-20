@@ -1,5 +1,13 @@
 version: "3.4"
 services:
+    nginx-proxy:
+        container_name: nginx-proxy
+        image: jwilder/nginx-proxy
+        ports:
+            - "80:80"
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+
     # https://hub.docker.com/_/postgres
     postgresql:
         container_name: db-sql
@@ -25,20 +33,13 @@ services:
         ports:
             - "8081:8081"
         environment:
+            - VIRTUAL_HOST=pgweb.mledoux.fr
             - DATABASE_URL=postgres://vooosh:admin@postgresql:5432/vooosh?sslmode=disable
         depends_on:
             - postgresql
         restart: unless-stopped
 
-    nginx-proxy:
-        container_name: nginx-proxy
-        image: jwilder/nginx-proxy
-        ports:
-            - "80:80"
-        volumes:
-            - /var/run/docker.sock:/tmp/docker.sock:ro
-
 volumes:
+    nginx-proxy:
     postgresql:
     pgadmin:
-    nginx-proxy:
