@@ -10,6 +10,7 @@ services:
             - "{{PORT}}:{{PORT}}"
         environment:
             - VIRTUAL_HOST={{VIRTUAL_HOST}}
+            - VIRTUAL_PORT={{PORT}}
             - SERVER_PORT={{PORT}}
             - DEBUG=vooosh:*
             - NODE_ENV=production
