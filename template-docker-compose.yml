@@ -12,8 +12,8 @@ services:
             - DEBUG=vooosh:*
             - NODE_ENV=production
             - DB_HOST=postgresql
-            - DB_NAME={{DB_NAME}}
-            - VIRTUAL_HOST={{VIRTUAL_HOST}}
+            - DB_NAME="{{DB_NAME}}"
+            - VIRTUAL_HOST="{{VIRTUAL_HOST}}"
         networks:
             - backend
 networks:
