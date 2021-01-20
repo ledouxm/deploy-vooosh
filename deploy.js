@@ -52,7 +52,7 @@ const deploy = async (branchName) => {
     //SET VIRTUAL HOST (127.0.0.1 RANDOMURL)
     try {
         console.log("setting virtual host");
-        hostile.set("127.0.0.1", randomUrl);
+        hostile.set("0.0.0.0", randomUrl);
     } catch (e) {
         console.error("Error setting virtual host", e);
         process.exit(0);
