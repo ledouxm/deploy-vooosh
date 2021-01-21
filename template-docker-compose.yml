@@ -1,6 +1,7 @@
 version: "3.4"
 services:
     vooosh:
+        container_name: { { CONTAINER_NAME } }
         build: .
         command: yarn workspace @vooosh/server start
         volumes:
@@ -11,6 +12,7 @@ services:
         environment:
             - VIRTUAL_HOST={{VIRTUAL_HOST}}
             - SERVER_PORT={{PORT}}
+            - VIRTUAL_POST={{PORT}}
             - DEBUG=vooosh:*
             - NODE_ENV=production
             - DB_HOST=postgresql

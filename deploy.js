@@ -88,6 +88,7 @@ const deploy = async (branchName) => {
     const newDockerCompose = templateDockerCompose
         .replace("{{VIRTUAL_HOST}}", randomUrl)
         .replace("{{DB_NAME}}", randomStr)
+        .replace("{ { CONTAINER_NAME } }", randomStr)
         .replace(new RegExp("{{PORT}}", "g"), randomPort);
     fs.writeFileSync(`./app/${randomStr}/docker-compose.yml`, newDockerCompose);
     //	console.log('red', template);
