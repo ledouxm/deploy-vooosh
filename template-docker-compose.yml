@@ -12,7 +12,7 @@ services:
         environment:
             - VIRTUAL_HOST={{VIRTUAL_HOST}}
             - SERVER_PORT={{PORT}}
-            - VIRTUAL_POST={{PORT}}
+            - VIRTUAL_PORT={{PORT}}
             - DEBUG=vooosh:*
             - NODE_ENV=production
             - DB_HOST=postgresql
