@@ -2,7 +2,7 @@ version: "3.4"
 services:
     nginx-proxy:
         container_name: nginx-proxy
-        image: jwilder/nginx-proxy
+        image: budry/jwilder-nginx-proxy-arm
         ports:
             - "80:80"
         volumes:
