@@ -12,21 +12,10 @@ COPY ./packages/shared/ ./packages/shared/
 COPY ./packages/router/ ./packages/router/
 COPY ./packages/fixtures/ ./packages/fixtures/
 COPY ./packages/server/ ./packages/server/
-# COPY ./packages/shared/tsconfig.build.json ./packages/shared/tsconfig.build.json
 
-# COPY ./packages/server/package.json ./packages/server/package.json
-# COPY ./packages/server/tsconfig.build.json ./packages/server/tsconfig.build.json
-
-# COPY ./packages/router/package.json ./packages/router/package.json
-# COPY ./packages/router/tsconfig.build.json ./packages/router/tsconfig.build.json
-
-# COPY ./packages/fixtures/package.json ./packages/fixtures/package.json
-# COPY ./packages/fixtures/tsconfig.build.json ./packages/fixtures/tsconfig.build.json
 RUN yarn install
 RUN mkdir -p /opt/app && cp -a /tmp/app/node_modules /opt/app/
 
 WORKDIR /opt/app
 COPY . .
 RUN cd ./packages/server && yarn build
-# EXPOSE 8080
-# RUN cd ./packages/server && export NODE_ENV=production && yarn start
