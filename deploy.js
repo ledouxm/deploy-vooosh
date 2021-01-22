@@ -32,11 +32,14 @@ const generateRandomPort = async () => {
 
 const deploy = async (branchName) => {
     //GENERER RANDOMURL
-    const randomStr = HexToWords.randomGuid().words.split(" ").slice(0, 3).join("-");
+    const randomStr = branchName
+        ? HexToWords.randomGuid().words.split(" ").slice(0, 3).join("-")
+        : "main";
     const randomUrl = `${randomStr}.mledoux.fr`;
     const randomPort = await generateRandomPort();
     console.log(randomStr, randomUrl);
 
+    const branch = branchName || "main";
     //CREER DB (name = RANDOMURL)
     try {
         const query = `CREATE DATABASE "${randomStr}"`;
@@ -69,11 +72,9 @@ const deploy = async (branchName) => {
 
     //CLONE BRANCHE process.argv[2]
     try {
-        console.log(
-            `git clone --single-branch --branch ${branchName} git@github.com:ledouxm/vooosh`
-        );
+        console.log(`git clone --single-branch --branch ${branch} git@github.com:ledouxm/vooosh`);
         execSync(
-            `git clone --single-branch --branch ${branchName} git@github.com:astahmer/vooosh ./app/${randomStr}`
+            `git clone --single-branch --branch ${branch} git@github.com:astahmer/vooosh ./app/${randomStr}`
         );
     } catch (e) {
         console.error("Error cloning repo", e);
@@ -91,9 +92,7 @@ const deploy = async (branchName) => {
         .replace("{ { CONTAINER_NAME } }", randomStr)
         .replace(new RegExp("{{PORT}}", "g"), randomPort);
     fs.writeFileSync(`./app/${randomStr}/docker-compose.yml`, newDockerCompose);
-    //	console.log('red', template);
-    //const appDockerfile = template.replace("{{DB_NAME}}", randomStr);
-    //LANCER docker-compose DU SERVEUR
+
     try {
         process.chdir(`./app/${randomStr}`);
         console.log("building");
